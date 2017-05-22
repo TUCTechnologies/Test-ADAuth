@@ -34,7 +34,7 @@ ForEach ($Username in $Usernames)
 {
   $guessed = Test-ADAuthentication $Username $PasswordToGuess
   If($guessed -Eq "True")
-	{
-		Write-Host $Username ": " $guessed
-	}
+  {
+    Write-Host $Username ": " $guessed
+  }
 }
