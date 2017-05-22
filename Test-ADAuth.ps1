@@ -48,19 +48,19 @@ ForEach ($Username in $Usernames)
   ForEach($char in $SpecialCharacters)
   {
     For($i=0; $i -lt 10; $i++)
-	{
+    {
       $PasswordToGuess = "$PasswordRootToGuess" + "$char" + "$i"
 	
       $guessed = Test-ADAuthentication $Username $PasswordToGuess
       If($guessed -Eq "True")
-	  {
+      {
         Write-Host $Username " - " $PasswordToGuess
-		Break
-	  }
-	}
-	If($guessed -Eq "True")
-	{
-	  Break
-	}
+	Break
+      }
+    }
+    If($guessed -Eq "True")
+    {
+      Break
+    }
   }
 }
