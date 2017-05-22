@@ -33,5 +33,8 @@ $Usernames = Get-ADUser -Filter * -SearchBase $SearchBase | Select -Exp SamAccou
 ForEach ($Username in $Usernames)
 {
   $guessed = Test-ADAuthentication $Username $PasswordToGuess
-  Write-Host $Username ": " $guessed
+  If($guessed -Eq "True")
+	{
+		Write-Host $Username ": " $guessed
+	}
 }
